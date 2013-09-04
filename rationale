@@ -1,0 +1,61 @@
+Docco is a documentation generator that can run on litcoffee files
+
+The idea is you write a lit coffee file and it automatically is parsed into a HTML viewable document.
+
+it can also run as a coffee script file
+
+---
+
+JUSTIFY THE NEED FOR A GENERATOR for CODECONV !
+
+docco works because you have to write the code anyway, and you're commenting about the code
+
+you're writing code in every project
+
+CODE CONV is not written for every project, or maybe it is...
+
+you have a CODE CONV for everyproject and it sits in your repo.
+
+.codeconv
+
+it generates a well documentated html page
+
+why do you need a generator ? 
+
+and not just a really good template people can copy and paste ?
+
+Q: Does this need to be done more than once ?
+
+A: once per project ?
+
+but people dont want to write the resulting HTML as it s fucking ugly.
+so give them a way to write markdown, run your codeconv generator which is simply a template engine
+
+
+
+
+---
+
+
+
+source looks like: 
+
+
+
+Generate the documentation for our configured source file by copying over static
+assets, reading all the source files in, splitting them up into prose+code
+sections, highlighting each file in the appropriate language, and printing them
+out in an HTML template.
+
+---- (function() {
+++++ (function() {
+
+Generate the documentation for our configured source file by copying over static
+assets, reading all the source files in, splitting them up into prose+code
+sections, highlighting each file in the appropriate language, and printing them
+out in an HTML template.
+
+---- var test;
+---- var test = 1;
+---- var test = 2;
+++++ var test, test = 1, test =2;
