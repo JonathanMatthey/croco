@@ -111,7 +111,7 @@ pre, tt, code {
   width:100%;
   padding: 5px 10px 5px 25px;
   /*-webkit-box-shadow: inset -10px 0 3px rgba(0,0,0,0.1);*/
-  /*  
+  /*
   border-left:1px solid #e5e5ee;
   border-top:1px solid #e5e5ee;
   border-right:1px solid #e5e5ee;
@@ -142,6 +142,10 @@ ul.sections {
   list-style: none;
   padding:0 0 5px 0;;
   margin:0;
+}
+
+.toc{
+  text-decoration: none;
 }
 
 /*
