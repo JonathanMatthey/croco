@@ -93,7 +93,7 @@
         hasCode = true;
         prevLineCodeType = codeType;
         codeType = getCodeLineType(line);
-        if (!!prevLineCodeType && codeType !== prevLineCodeType) {
+        if (!!prevLineCodeType || (!!prevLineCodeType && codeType !== prevLineCodeType)) {
           codeBlocks.push({
             'codeType': prevLineCodeType,
             'codeText': codeText
@@ -102,6 +102,7 @@
         } else {
           codeText += line.slice(4) + '\n';
         }
+        console.log(line);
       }
     }
     save();

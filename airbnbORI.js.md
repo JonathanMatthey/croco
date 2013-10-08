@@ -145,7 +145,6 @@ To convert an array-like object to an array, use Array#slice.
       var args = Array.prototype.slice.call(arguments);
       ...
     }
-----
 
 
 **<a href="#TOC" class="toc">[⬆]</a>**

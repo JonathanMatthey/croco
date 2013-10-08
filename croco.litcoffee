@@ -124,12 +124,14 @@ normal below.
           codeType = getCodeLineType line
           
           # empty prevLineCodeType means this is the first line
-          if !!prevLineCodeType && codeType != prevLineCodeType
+          if !!prevLineCodeType || ( !!prevLineCodeType && codeType != prevLineCodeType )
             # code type has switched, push that block out
             codeBlocks.push { 'codeType': prevLineCodeType, 'codeText': codeText }
             codeText = line[4..] + '\n'
           else
             codeText += line[4..] + '\n'
+
+          console.log(line)
 
       save()
 
