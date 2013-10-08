@@ -3,7 +3,7 @@ Croco
 
 **Croco** is a code convention documentation generator, written in
 [Literate CoffeeScript](http://coffeescript.org/#literate).
-It extends docco with specific code convention features.
+It extends croco with specific code convention features.
 
 Good code:
 ++++ function isthisCode() = { return "?"}
@@ -11,75 +11,35 @@ Good code:
 Bad code:
 ---- function Function-My_name  () = { return "?"}
 
-Docco
+Croco
 =====
 
-**Docco** is a quick-and-dirty documentation generator, written in
+**Croco** is a quick-and-dirty documentation generator, written in
 [Literate CoffeeScript](http://coffeescript.org/#literate).
 It produces an HTML document that displays your comments intermingled with your
 code. All prose is passed through
 [Markdown](http://daringfireball.net/projects/markdown/syntax), and code is
 passed through [Highlight.js](http://highlightjs.org/) syntax highlighting.
-This page is the result of running Docco against its own
-[source file](https://github.com/jashkenas/docco/blob/master/croco.litcoffee).
+This page is the result of running Croco against its own
+[source file](https://github.com/jashkenas/croco/blob/master/croco.litcoffee).
 
-1. Install Docco with **npm**: `sudo npm install -g docco`
+1. Install Croco with **npm**: `sudo npm install -g croco`
 
-2. Run it against your code: `docco src/*.coffee`
+2. Run it against your code: `croco src/*.coffee`
 
 There is no "Step 3". This will generate an HTML page for each of the named
 source files, with a menu linking to the other pages, saving the whole mess
 into a `docs` folder (configurable).
 
-The [Docco source](http://github.com/jashkenas/docco) is available on GitHub,
+The [Croco source](http://github.com/manymengofishing/croco) is available on GitHub,
 and is released under the [MIT license](http://opensource.org/licenses/MIT).
 
-Docco can be used to process code written in any programming language. If it
+Croco can be used to process code written in any programming language. If it
 doesn't handle your favorite yet, feel free to
-[add it to the list](https://github.com/jashkenas/docco/blob/master/resources/languages.json).
+[add it to the list](https://github.com/jashkenas/croco/blob/master/resources/languages.json).
 Finally, the ["literate" style](http://coffeescript.org/#literate) of *any*
 language is also supported — just tack an `.md` extension on the end:
 `.coffee.md`, `.py.md`, and so on.
-
-
-Partners in Crime:
-------------------
-
-* If Node.js doesn't run on your platform, or you'd prefer a more
-convenient package, get [Ryan Tomayko](http://github.com/rtomayko)'s
-[Rocco](http://rtomayko.github.io/rocco/rocco.html), the **Ruby** port that's
-available as a gem.
-
-* If you're writing shell scripts, try
-[Shocco](http://rtomayko.github.io/shocco/), a port for the **POSIX shell**,
-also by Mr. Tomayko.
-
-* If **Python** is more your speed, take a look at
-[Nick Fitzgerald](http://github.com/fitzgen)'s [Pycco](http://fitzgen.github.io/pycco/).
-
-* For **Clojure** fans, [Fogus](http://blog.fogus.me/)'s
-[Marginalia](http://fogus.me/fun/marginalia/) is a bit of a departure from
-"quick-and-dirty", but it'll get the job done.
-
-* There's a **Go** port called [Gocco](http://nikhilm.github.io/gocco/),
-written by [Nikhil Marathe](https://github.com/nikhilm).
-
-* Your all you **PHP** buffs out there, Fredi Bach's
-[sourceMakeup](http://jquery-jkit.com/sourcemakeup/) (we'll let the faux pas
-with respect to our naming scheme slide), should do the trick nicely.
-
-* **Lua** enthusiasts can get their fix with
-[Robert Gieseke](https://github.com/rgieseke)'s [Locco](http://rgieseke.github.io/locco/).
-
-* And if you happen to be a **.NET**
-aficionado, check out [Don Wilson](https://github.com/dontangg)'s
-[Nocco](http://dontangg.github.io/nocco/).
-
-* Going further afield from the quick-and-dirty, [Groc](http://nevir.github.io/groc/)
-is a **CoffeeScript** fork of Docco that adds a searchable table of contents,
-and aims to gracefully handle large projects with complex hierarchies of code.
-
-Note that not all ports will support all Docco features ... yet.
 
 
 Main Documentation Generation Functions
@@ -205,7 +165,7 @@ if not specified.
           if highlightjs.LANGUAGES[lang]
             highlightjs.highlight(lang, code).value
           else
-            console.warn "docco: couldn't highlight code block with unknown language '#{lang}' in #{source}"
+            console.warn "croco: couldn't highlight code block with unknown language '#{lang}' in #{source}"
             code
       }
 
@@ -236,7 +196,7 @@ name of the source file.
       html = config.template {sources: config.sources, css: path.basename(config.css),
         title, hasTitle, sections, path, destination,}
 
-      console.log "docco: #{source} -> #{destination source}"
+      console.log "croco: #{source} -> #{destination source}"
       fs.writeFileSync destination(source), html
 
 
@@ -247,14 +207,15 @@ Default configuration **options**. All of these may be extended by
 user-specified options.
 
     defaults =
-      layout:     'parallel'
+      layout:     'codeconv'
       output:     'docs'
       template:   null
       css:        null
       extension:  null
-      languages:  {}
+      languages:  {".js":{"name": "javascript", "symbol": "//"}}
+      newProjectFiles:   ['airbnb.js.md','nytimes.js.md','javascript.js.md']
 
-**Configure** this particular run of Docco. We might use a passed-in external
+**Configure** this particular run of Croco. We might use a passed-in external
 template, or one of the built-in **layouts**. We only attempt to process
 source files for languages for which we have definitions.
 
@@ -266,16 +227,19 @@ source files for languages for which we have definitions.
         config.layout = null
       else
         dir = config.layout = path.join __dirname, 'resources', config.layout
+        config.samplesDir   = path.join __dirname, 'resources', 'samples' 
         config.public       = path.join dir, 'public' if fs.existsSync path.join dir, 'public'
         config.template     = path.join dir, 'croco.jst'
         config.css          = options.css or path.join dir, 'croco.css'
       config.template = _.template fs.readFileSync(config.template).toString()
 
-      config.sources = options.args.filter((source) ->
-        lang = getLanguage source, config
-        console.warn "docco: skipped unknown type (#{path.basename source})" unless lang
-        lang
-      ).sort()
+      if options.args
+        config.sources = [options.args[0]]
+        #.filter((source) ->
+        #  lang = getLanguage source, config
+        #  console.warn "croco: skipped unknown type (#{path.basename source})" unless lang
+        #  lang
+        #).sort()
 
       config
 
@@ -299,7 +263,7 @@ Enable nicer typography with marked.
 Languages are stored in JSON in the file `resources/languages.json`.
 Each item maps the file extension to the name of the language and the
 `symbol` that indicates a line comment. To add support for a new programming
-language to Docco, just add it to the file.
+language to Croco, just add it to the file.
 
     languages = JSON.parse fs.readFileSync(path.join(__dirname, 'resources', 'languages.json'))
 
@@ -330,46 +294,30 @@ file extension. Detect and tag "literate" `.ext.md` variants.
           lang = _.extend {}, codeLang, {literate: yes}
       lang
 
-Keep it DRY. Extract the docco **version** from `package.json`
+Keep it DRY. Extract the croco **version** from `package.json`
 
     version = JSON.parse(fs.readFileSync(path.join(__dirname, 'package.json'))).version
 
 Creates the bare coding convention project which consist of 
 folder structures and example files
 
-    create = () ->
-      file = path.join(__dirname, '/resources/codeconv/public/stylesheets/normalize.css')
-      fs.copy file, '.'
+Copy all sample files in base dir 
+- can you read the dir ? 
 
-        #copyAsset  = (file, callback) ->
-          #fs.copy file, path.join(config.output, path.basename(file)), callback
-        #complete   = ->
-          #copyAsset config.css, (error) ->
-            #if error then callback error
-            #else if fs.existsSync config.public then copyAsset config.public, callback
-            #else callback()
+    createNewProject = (options = {}) ->
+      config = configure options
+      config.output = '.'
 
-        #files = config.sources.slice()
+      files = config.newProjectFiles.slice()
 
-        #nextFile = ->
-          #source = files.shift()
-          #fs.readFile source, (error, buffer) ->
-            #return callback error if error
-
-            #code = buffer.toString()
-            #sections = parse source, code, config
-            #format source, sections, config
-            #write source, sections, config
-            #if files.length then nextFile() else complete()
-
-        #nextFile()
-
+      for file in files
+        fs.copy path.join(config.samplesDir, file), path.join(config.output, path.basename(file))
 
 
 Command Line Interface
 ----------------------
 
-Finally, let's define the interface to run Docco from the command line.
+Finally, let's define the interface to run Croco from the command line.
 Parse options using [Commander](https://github.com/visionmedia/commander.js).
 
     run = (args = process.argv) ->
@@ -383,20 +331,19 @@ Parse options using [Commander](https://github.com/visionmedia/commander.js).
         #.option('-t, --template [file]',  'use a custom .jst template', c.template)
         #.option('-e, --extension [ext]',  'assume a file extension for all inputs', c.extension)
         .parse(args)
-        .name = "docco"
+        .name = "croco"
 
       commander
-        .command('create')
+        .command('new')
         .description('creates a new coding convention project')
         .action ()->
-          create()
+          createNewProject()
 
       commander
-        .command('setup')
+        .command('generate')
         .description('run remote setup commands')
         .action ()->
-          console.log('setup')
-
+          document commander
 
       if commander.args.length == 0
         console.log commander.helpInformation()
@@ -409,4 +356,4 @@ Parse options using [Commander](https://github.com/visionmedia/commander.js).
 Public API
 ----------
 
-    Docco = module.exports = {run, document, create, parse, format, version}
+    Croco = module.exports = {run, document, createNewProject, parse, format, version}
